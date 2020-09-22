@@ -54,7 +54,7 @@
             this.fleet.forEach(function (ship) {
                 if (sheep.dom.parentNode) {
                     // sheep.dom.parentNode.removeChild(ship.dom);
-                    ship.dom.remove()
+                    // ship.dom.remove()
                 }
             });
         },
