@@ -4,7 +4,7 @@
 (function (global) {
     "use strict";
 
-    var sheep = {dom: {parentNode: {removeChild: function () {}}}};
+    var sheep = { dom: { parentNode: { removeChild: function () { } } } };
 
     var player = {
         grid: [],
@@ -18,7 +18,7 @@
             this.fleet.push(shipFactory.build(shipFactory.TYPE_DESTROYER));
             this.fleet.push(shipFactory.build(shipFactory.TYPE_SUBMARINE));
             this.fleet.push(shipFactory.build(shipFactory.TYPE_SMALL_SHIP));
-            
+
             // créé les grilles
             this.grid = utils.createGrid(10, 10);
             this.tries = utils.createGrid(10, 10);
@@ -41,8 +41,19 @@
         },
         setActiveShipPosition: function (x, y) {
             var ship = this.fleet[this.activeShip];
-            var i = 0;
+            let i = 0;
+            if (ship.getLife() == 3) x++
 
+            while (i < ship.getLife()) {
+                if (this.grid[y][x + i] > 0) {
+                    // console.log(this.grid[y][x + i] > 0, "and this is the $i", i, "coordinates x y:", x + i, y, "size of boat:", ship.getLife())
+                    return false;
+                }
+                // console.log(this.grid[y][x + i] > 0, "and this is the $i", i, "coordinates x y:", x + i, y, "size of boat:", ship.getLife())
+                i += 1;
+            }
+
+            i = 0;
             while (i < ship.getLife()) {
                 this.grid[y][x + i] = ship.getId();
                 i += 1;
