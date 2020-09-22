@@ -18,7 +18,7 @@
             this.fleet.push(shipFactory.build(shipFactory.TYPE_DESTROYER));
             this.fleet.push(shipFactory.build(shipFactory.TYPE_SUBMARINE));
             this.fleet.push(shipFactory.build(shipFactory.TYPE_SMALL_SHIP));
-
+            
             // créé les grilles
             this.grid = utils.createGrid(10, 10);
             this.tries = utils.createGrid(10, 10);
