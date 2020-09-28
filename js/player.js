@@ -42,7 +42,10 @@
         setActiveShipPosition: function (x, y, orientation) {
             var ship = this.fleet[this.activeShip];
             let i = 0;
-            if (ship.getLife() == 3) x++
+            if (orientation == 'vertical') x += 2
+            if (orientation == 'vertical') y -= 2
+            if (ship.getLife() == 3 && orientation == 'horizontal') x++
+            if (ship.getLife() == 3 && orientation == 'vertical') y++
             if (x < 0
                 || y < 0
                 || (x + ship.getLife() > 10) // I HAVE TO ADD A CONDITION ON THIS ONE IF IT IS HORIZONTAL
@@ -52,18 +55,29 @@
             }
 
             while (i < ship.getLife()) {
-                if (this.grid[y][x + i] > 0) {
-                    return false;
+                if (orientation == 'horizontal') {
+                    if (this.grid[y][x + i] > 0) {
+                        return false;
+                    }
+                }
+                else {
+                    if (this.grid[y + i][x] > 0) {
+                        return false;
+                    }
                 }
                 i += 1;
             }
 
             i = 0;
             while (i < ship.getLife()) {
-                this.grid[y][x + i] = ship.getId();
+                if (orientation == 'horizontal') {
+                    this.grid[y][x + i] = ship.getId();
+                }
+                else {
+                    this.grid[y + i][x] = ship.getId();
+                }
                 i += 1;
             }
-
             return true;
         },
         clearPreview: function () {
