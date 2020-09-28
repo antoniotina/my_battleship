@@ -23,6 +23,7 @@
         // garde une référence vers les noeuds correspondant du dom
         grid: null,
         miniGrid: null,
+        orientation: 'horizontal',
 
         // liste des joueurs
         players: [],
@@ -124,6 +125,13 @@
             // on ajoute des acouteur uniquement sur la grid (délégation d'événement)
             this.grid.addEventListener('mousemove', _.bind(this.handleMouseMove, this));
             this.grid.addEventListener('click', _.bind(this.handleClick, this));
+            this.grid.addEventListener('contextmenu', _.bind(this.rightClickOrientation, this))
+        },
+        rightClickOrientation: function (e) {
+            e.preventDefault();
+            var ship = this.players[0].fleet[this.players[0].activeShip];
+            this.orientation == 'horizontal' ? this.orientation = 'vertical' : this.orientation = 'horizontal'
+            ship.swapOrientation(this.orientation)
         },
         handleMouseMove: function (e) {
             // on est dans la phase de placement des bateau
@@ -137,9 +145,15 @@
                     ship.dom.style.zIndex = -1;
                 }
 
-                // décalage visuelle, le point d'ancrage du curseur est au milieu du bateau
-                ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
-                ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
+                // décalage visuelle, le point d'ancrage du curseur est au milieu du bateauj
+                if (this.orientation == 'horizontal') {
+                    ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
+                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
+                }
+                else {
+                    ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
+                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + (utils.CELL_SIZE * 2) + "px";
+                }
             }
         },
         handleClick: function (e) {
@@ -151,7 +165,7 @@
                 // si on est dans la phase de placement des bateau
                 if (this.getPhase() === this.PHASE_INIT_PLAYER) {
                     // on enregistre la position du bateau, si cela se passe bien (la fonction renvoie true) on continue
-                    if (this.players[0].setActiveShipPosition(utils.eq(e.target)-2, utils.eq(e.target.parentNode))) {
+                    if (this.players[0].setActiveShipPosition(utils.eq(e.target) - 2, utils.eq(e.target.parentNode), this.orientation)) {
                         // et on passe au bateau suivant (si il n'y en plus la fonction retournera false)
                         if (!this.players[0].activateNextShip()) {
                             this.wait();

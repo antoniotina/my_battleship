@@ -50,6 +50,16 @@
             this.dom.style.position = "relative";
             this.dom.style.opacity = "0.8";
             this.dom.style.backgroundColor = this.color;
+        },
+        swapOrientation: function (orientation) {
+            if (orientation == 'horizontal') {
+                this.dom.style.height = "" + utils.CELL_SIZE + "px"
+                this.dom.style.width = "" + utils.CELL_SIZE * this.life + "px"
+            }
+            else {
+                this.dom.style.width = "" + utils.CELL_SIZE + "px";
+                this.dom.style.height = "" + utils.CELL_SIZE * this.life + "px";
+            }
         }
     };
 

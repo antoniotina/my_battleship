@@ -39,17 +39,22 @@
             }
             callback.call(undefined, succeed);
         },
-        setActiveShipPosition: function (x, y) {
+        setActiveShipPosition: function (x, y, orientation) {
             var ship = this.fleet[this.activeShip];
             let i = 0;
             if (ship.getLife() == 3) x++
+            if (x < 0
+                || y < 0
+                || (x + ship.getLife() > 10) // I HAVE TO ADD A CONDITION ON THIS ONE IF IT IS HORIZONTAL
+                // || x + ship.getLife() > 10  I HAVE TO ADD A CONDITION ON THIS ONE IF IT IS VERTICAL)
+            ) {
+                return false
+            }
 
             while (i < ship.getLife()) {
                 if (this.grid[y][x + i] > 0) {
-                    // console.log(this.grid[y][x + i] > 0, "and this is the $i", i, "coordinates x y:", x + i, y, "size of boat:", ship.getLife())
                     return false;
                 }
-                // console.log(this.grid[y][x + i] > 0, "and this is the $i", i, "coordinates x y:", x + i, y, "size of boat:", ship.getLife())
                 i += 1;
             }
 
