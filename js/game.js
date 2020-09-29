@@ -145,17 +145,27 @@
                     ship.dom.style.zIndex = -1;
                 }
 
+                // utils.eq(e.target.parentNode) = y
+                // utils.eq(e.target) = x
                 // décalage visuelle, le point d'ancrage du curseur est au milieu du bateauj
-                ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
-                ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
-                // if (this.orientation == 'horizontal') {
-                //     ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
-                //     ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
-                // }
-                // else {
-                //     ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) - (utils.CELL_SIZE * 2) + "px";
-                //     ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + (utils.CELL_SIZE * 2) + "px";
-                // }
+                // console.log('y', (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60))
+                // console.log('x', utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE)
+                if (this.orientation == 'horizontal') {
+                    ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
+                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
+                }
+                else {
+                    // console.log((utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600)
+                    // console.log(this.players[0].activeShip)
+                    if (this.players[0].activeShip == 3) {
+                        ship.dom.style.top = "" + (utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600 - ((this.players[0].activeShip) * 280) + "px";
+                    }
+                    else {
+                        ship.dom.style.top = "" + (utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600 - ((this.players[0].activeShip) * 300) + "px";
+                    }
+                    // console.log(ship.dom.style.top)
+                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE + "px";
+                }
             }
         },
         handleClick: function (e) {
