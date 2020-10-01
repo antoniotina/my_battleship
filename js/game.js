@@ -129,9 +129,15 @@
         },
         rightClickOrientation: function (e) {
             e.preventDefault();
-            var ship = this.players[0].fleet[this.players[0].activeShip];
-            this.orientation == 'horizontal' ? this.orientation = 'vertical' : this.orientation = 'horizontal'
-            ship.swapOrientation(this.orientation)
+            if (this.getPhase() === this.PHASE_INIT_PLAYER && e.target.classList.contains('cell')) {
+                var ship = this.players[0].fleet[this.players[0].activeShip];
+                if (ship.dom.parentNode) {
+                    ship.changeOrientation();
+                }
+            }
+
+            let gridShift = utils.calculateGridShift(this.players[0]);
+            ship.followCursor(gridShift, e.target.parentNode, e.target);
         },
         handleMouseMove: function (e) {
             // on est dans la phase de placement des bateau
@@ -145,30 +151,13 @@
                     ship.dom.style.zIndex = -1;
                 }
 
-                // utils.eq(e.target.parentNode) = y
-                // utils.eq(e.target) = x
-                // décalage visuelle, le point d'ancrage du curseur est au milieu du bateauj
-                // console.log('y', (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60))
-                // console.log('x', utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE)
-                if (this.orientation == 'horizontal') {
-                    ship.dom.style.top = "" + (utils.eq(e.target.parentNode)) * utils.CELL_SIZE - (600 + this.players[0].activeShip * 60) + "px";
-                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE - Math.floor(ship.getLife() / 2) * utils.CELL_SIZE + "px";
-                }
-                else {
-                    // console.log((utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600)
-                    // console.log(this.players[0].activeShip)
-                    if (this.players[0].activeShip == 3) {
-                        ship.dom.style.top = "" + (utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600 - ((this.players[0].activeShip) * 280) + "px";
-                    }
-                    else {
-                        ship.dom.style.top = "" + (utils.eq(e.target.parentNode) * utils.CELL_SIZE) - (Math.floor(ship.getLife() / 2) * utils.CELL_SIZE) - 600 - ((this.players[0].activeShip) * 300) + "px";
-                    }
-                    // console.log(ship.dom.style.top)
-                    ship.dom.style.left = "" + utils.eq(e.target) * utils.CELL_SIZE + "px";
-                }
+                // décalage visuelle, le point d'ancrage du curseur est au milieu du bateau
+                let gridShift = utils.calculateGridShift(this.players[0]);
+                ship.followCursor(gridShift, e.target.parentNode, e.target);
             }
         },
         handleClick: function (e) {
+            console.log(this.players[0].grid);
             // self garde une référence vers "this" en cas de changement de scope
             var self = this;
 
@@ -177,9 +166,7 @@
                 // si on est dans la phase de placement des bateau
                 if (this.getPhase() === this.PHASE_INIT_PLAYER) {
                     // on enregistre la position du bateau, si cela se passe bien (la fonction renvoie true) on continue
-                    if (this.players[0].setActiveShipPosition(utils.eq(e.target) - 2, utils.eq(e.target.parentNode), this.orientation)) {
-                        console.log(this.players[0].grid)
-                        this.orientation = 'horizontal'
+                    if (this.players[0].setActiveShipPosition(utils.eq(e.target) - 2, utils.eq(e.target.parentNode))) {
                         // et on passe au bateau suivant (si il n'y en plus la fonction retournera false)
                         if (!this.players[0].activateNextShip()) {
                             this.wait();
@@ -187,7 +174,7 @@
                                 // si le placement est confirmé
                                 self.stopWaiting();
                                 self.renderMiniMap();
-                                self.players[0].clearPreview();
+                                // self.players[0].clearPreview();
                                 self.goNextPhase();
                             }, function () {
                                 self.stopWaiting();

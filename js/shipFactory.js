@@ -51,15 +51,22 @@
             this.dom.style.opacity = "0.8";
             this.dom.style.backgroundColor = this.color;
         },
-        swapOrientation: function (orientation) {
-            if (orientation == 'horizontal') {
-                this.dom.style.height = "" + utils.CELL_SIZE + "px"
-                this.dom.style.width = "" + utils.CELL_SIZE * this.life + "px"
+        changeOrientation: function () {
+            var newWidth = this.dom.style.height;
+            this.dom.style.height = this.dom.style.width;
+            this.dom.style.width = newWidth;
+        },
+        followCursor: function (gridShift, row, col) {
+            if (this.getIsHorizontal()) {
+                this.dom.style.top = "" + (utils.eq(row)) * utils.CELL_SIZE - gridShift + "px";
+                this.dom.style.left = "" + utils.eq(col) * utils.CELL_SIZE - Math.floor(this.getLife() / 2) * utils.CELL_SIZE + "px";
+            } else {
+                this.dom.style.top = "" + (utils.eq(row)) * utils.CELL_SIZE - gridShift - Math.floor(this.getLife() / 2) * utils.CELL_SIZE + "px";
+                this.dom.style.left = "" + utils.eq(col) * utils.CELL_SIZE + "px";
             }
-            else {
-                this.dom.style.width = "" + utils.CELL_SIZE + "px";
-                this.dom.style.height = "" + utils.CELL_SIZE * this.life + "px";
-            }
+        },
+        getIsHorizontal: function () {
+            return (this.dom.clientWidth > this.dom.clientHeight);
         }
     };
 

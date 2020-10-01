@@ -42,41 +42,46 @@
         setActiveShipPosition: function (x, y, orientation) {
             var ship = this.fleet[this.activeShip];
             let i = 0;
-            if (orientation == 'vertical') x += 2
-            if (orientation == 'vertical') y -= 2
-            if (ship.getLife() == 3 && orientation == 'horizontal') x++
-            if (ship.getLife() == 3 && orientation == 'vertical') y++
-            if (x < 0
-                || y < 0
-                || (x + ship.getLife() > 10) // I HAVE TO ADD A CONDITION ON THIS ONE IF IT IS HORIZONTAL
-                // || x + ship.getLife() > 10  I HAVE TO ADD A CONDITION ON THIS ONE IF IT IS VERTICAL)
-            ) {
-                return false
-            }
 
-            while (i < ship.getLife()) {
-                if (orientation == 'horizontal') {
+            if (ship.getIsHorizontal()) {
+                if (ship.getLife() == 3) x++;
+
+                while (i < ship.getLife()) {
                     if (this.grid[y][x + i] > 0) {
                         return false;
                     }
+                    i += 1;
                 }
-                else {
-                    if (this.grid[y + i][x] > 0) {
+
+                if (x < 0 || (x + ship.getLife() > 10)) {
+                    return false;
+                }
+
+                i = 0;
+                while (i < ship.getLife()) {
+                    this.grid[y][x + i] = ship.getId();
+                    i += 1;
+                }
+            } else {
+                if (ship.getLife() == 3) y++;
+
+                while (i < ship.getLife()) {
+                    console.log(y + i - 2);
+                    if (this.grid[y + i - 2][x + 2] > 0) {
                         return false;
                     }
+                    i += 1;
                 }
-                i += 1;
-            }
 
-            i = 0;
-            while (i < ship.getLife()) {
-                if (orientation == 'horizontal') {
-                    this.grid[y][x + i] = ship.getId();
+                if (y < 2 || (y + ship.getLife() > 12)) {
+                    return false;
                 }
-                else {
-                    this.grid[y + i][x] = ship.getId();
+
+                i = 0;
+                while (i < ship.getLife()) {
+                    this.grid[y + i - 2][x + 2] = ship.getId();
+                    i += 1;
                 }
-                i += 1;
             }
             return true;
         },
