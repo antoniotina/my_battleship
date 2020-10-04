@@ -56,8 +56,8 @@
         },
         setupPlayers: function () {
             // donne aux objets player et computer une réference vers l'objet game
-            player.setGame(this);
             computer.setGame(this);
+            player.setGame(this);
 
             // todo : implémenter le jeu en réseaux
             this.players = [player, computer];
@@ -89,7 +89,7 @@
                 case this.PHASE_INIT_OPPONENT:
                     this.wait();
                     utils.info("En attente de votre adversaire");
-                    this.players[1].isShipOk(function () {
+                    this.players[1].areShipsOk(function () {
                         self.stopWaiting();
                         self.goNextPhase();
                     });
@@ -137,7 +137,7 @@
             }
 
             let gridShift = utils.calculateGridShift(this.players[0]);
-            ship.followCursor(gridShift, e.target.parentNode, e.target);
+            if (ship) ship.followCursor(gridShift, e.target.parentNode, e.target);
         },
         handleMouseMove: function (e) {
             // on est dans la phase de placement des bateau
@@ -172,6 +172,7 @@
                             this.wait();
                             utils.confirm("Confirmez le placement ?", function () {
                                 // si le placement est confirmé
+                                console.log(computer)
                                 self.stopWaiting();
                                 self.renderMiniMap();
                                 // self.players[0].clearPreview();

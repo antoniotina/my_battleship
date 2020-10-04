@@ -9,6 +9,17 @@
         tries: [],
         fleet: [],
         game: null,
+        init: function () {
+            // créé la flotte
+            this.fleet.push(shipFactory.build(shipFactory.TYPE_BATTLESHIP));
+            this.fleet.push(shipFactory.build(shipFactory.TYPE_DESTROYER));
+            this.fleet.push(shipFactory.build(shipFactory.TYPE_SUBMARINE));
+            this.fleet.push(shipFactory.build(shipFactory.TYPE_SMALL_SHIP));
+
+            // créé les grilles
+            this.grid = utils.createGrid(10, 10);
+            this.tries = utils.createGrid(10, 10);
+        },
         play: function () {
             var self = this;
             setTimeout(function () {
@@ -21,7 +32,14 @@
             var i = 0;
             var j;
 
-            this.fleet[i].forEach(function (ship, i) {
+            this.fleet.forEach(function (ship, i) {
+
+                // do
+                // random horizontal or vertical
+                // random x coordinate
+                // random y coordinate
+                // check if the active boat fits in the coordinates given
+                // while(setships are ok)
                 j = 0;
                 while (j < ship.life) {
                     this.grid[i][j] = ship.getId();
@@ -32,6 +50,9 @@
             setTimeout(function () {
                 callback();
             }, 500);
+        },
+        setGame: function (game) {
+            this.game = game
         }
     });
 
